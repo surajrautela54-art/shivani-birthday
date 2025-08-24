@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shivani's Birthday Surprise 🎉</title>
+<style>
+body {
+  margin:0; padding:0; background:#ffe4e1; font-family:Arial,sans-serif; color:#333;
+  text-align:center;
+  overflow-x:hidden;
+}
+h1 { font-size:3em; margin-top:20px; color:#ff3399; text-shadow:0 0 10px #ff99cc,0 0 20px #ff66b3; animation: blink 1s infinite; position:relative; z-index:10; }
+@keyframes blink {0%{opacity:1}50%{opacity:.5}100%{opacity:1}}
+.cake { font-size:100px; margin:10px auto; animation:flicker 1s infinite; position:relative; z-index:10; }
+@keyframes flicker {0%{opacity:1}50%{opacity:.6}100%{opacity:1}}
+.message-box { position:relative; z-index:10; margin:20px auto; max-width:650px; background:rgba(255,255,255,0.85); border:2px solid #ff66cc; border-radius:15px; padding:25px; text-align:center; box-shadow:0 0 15px #ff66b3; font-size:1.2em; line-height:1.6;}
+.balloon { position:absolute; animation:float linear infinite; z-index:5; }
+@keyframes float {0%{transform:translateY(100vh);}100%{transform:translateY(-150vh);}}
+canvas {position:fixed; top:0; left:0; z-index:1;}
+</style>
+</head>
+<body>
+
+<h1>🎉 Happy 26th Birthday Shivani! 🎉</h1>
+<div class="cake">🎂</div>
+<div class="message-box">
+<p>Even with fewer chats and long distance, SSC preparations brought us closer — still, we are good friends.</p>
+<p>🌸 Friendship and life are not about daily talks; it’s the bond that never fades. 🌸</p>
+<p>💌 Life is short, cherish every moment, laugh often, and celebrate every little success.</p>
+<p>— From your friend</p>
+</div>
+
+<canvas id="confetti"></canvas>
+<audio autoplay loop>
+  <source src="https://www.bensound.com/bensound-music/bensound-celebration.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+// Confetti setup
+const canvas=document.getElementById("confetti");
+const ctx=canvas.getContext("2d");
+function resizeCanvas(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
+window.addEventListener('resize',resizeCanvas);
+resizeCanvas();
+
+let confettiPieces=[];
+for(let i=0;i<150;i++){
+  confettiPieces.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*6+2,d:Math.random()*100,color:`hsl(${Math.random()*360},100%,50%)`,tilt:Math.random()*10-10,tiltAngleIncremental:Math.random()*0.07+0.05,tiltAngle:0});
+}
+
+function drawConfetti(){ctx.clearRect(0,0,canvas.width,canvas.height); confettiPieces.forEach((p,i)=>{ctx.beginPath(); ctx.lineWidth=p.r; ctx.strokeStyle=p.color; ctx.moveTo(p.x+p.tilt+p.r/2,p.y); ctx.lineTo(p.x+p.tilt,p.y+p.tilt+p.r/2); ctx.stroke(); p.tiltAngle+=p.tiltAngleIncremental; p.y+=(Math.cos(p.d)+3+p.r/2)/2; p.tilt=Math.sin(p.tiltAngle-i/3)*15; if(p.y>canvas.height){p.y=-20;p.x=Math.random()*canvas.width;}});}
+setInterval(drawConfetti,20);
+
+// Balloons
+function createBalloon(){const b=document.createElement("div");b.classList.add("balloon");b.style.left=Math.random()*window.innerWidth+"px";b.style.fontSize=(25+Math.random()*25)+"px";b.style.color=`hsl(${Math.random()*360},100%,50%)`;b.innerHTML="🎈";document.body.appendChild(b);const duration=8000+Math.random()*4000;b.style.animationDuration=duration+"ms";setTimeout(()=>b.remove(),duration);}
+setInterval(createBalloon,400);
+
+// Fireworks + sparkles
+function fireworks(x,y){const colors=["#ff0040","#00ffea","#fffd00","#ff9900","#00ff44","#ff66ff"];for(let i=0;i<12;i++){const f=document.createElement("div");f.style.position="absolute";f.style.left=x+"px";f.style.top=y+"px";const size=5+Math.random()*15;f.style.width=size+"px";f.style.height=size+"px";f.style.borderRadius="50%";f.style.background=colors[Math.floor(Math.random()*colors.length)];f.style.boxShadow=`0 0 25px ${f.style.background}, 0 0 50px ${f.style.background}`;f.style.zIndex=2;document.body.appendChild(f);const duration=1000+Math.random()*800;setTimeout(()=>f.remove(),duration);}}
+setInterval(()=>fireworks(Math.random()*window.innerWidth, Math.random()*window.innerHeight),400);
+
+document.body.addEventListener('click',(e)=>{
+    fireworks(e.clientX,e.clientY);
+    for(let i=0;i<10;i++){
+      const s=document.createElement("div");
+      s.style.position="absolute";
+      s.style.left=e.clientX+"px";
+      s.style.top=e.clientY+"px";
+      const size=2+Math.random()*6;
+      s.style.width=size+"px";
+      s.style.height=size+"px";
+      s.style.borderRadius="50%";
+      s.style.background=`hsl(${Math.random()*360},100%,70%)`;
+      s.style.boxShadow=`0 0 10px ${s.style.background},0 0 20px ${s.style.background}`;
+      s.style.zIndex=3;
+      document.body.appendChild(s);
+      const dx=(Math.random()-0.5)*100;
+      const dy=(Math.random()-0.5)*100;
+      let posX=e.clientX,posY=e.clientY;
+      const anim=setInterval(()=>{
+        posX+=dx*0.02;
+        posY+=dy*0.02;
+        s.style.left=posX+"px";
+        s.style.top=posY+"px";
+      },20);
+      setTimeout(()=>{clearInterval(anim); s.remove();},1200);
+    }
+});
+</script>
+
+</body>
+</html>
